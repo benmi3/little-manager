@@ -1,8 +1,9 @@
 use axum::{
     Json, Router,
+    body::Body,
     error_handling::HandleErrorLayer,
     extract::{Path, Query, State},
-    http::StatusCode,
+    http::{StatusCode, header},
     response::IntoResponse,
     routing::{get, patch},
 };
@@ -16,6 +17,7 @@ use tower::{BoxError, ServiceBuilder};
 use tower_http::trace::TraceLayer;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 //use uuid::Uuid;
+use qrcode_generator::QrCodeEcc;
 
 #[tokio::main]
 async fn main() {
@@ -153,4 +155,24 @@ impl Todo {
             completed,
         }
     }
+}
+
+async fn qrcode_create(Path(id): Path<u128>, State(db): State<Db>) -> impl IntoResponse {
+    let result: Vec<u8> =
+        qrcode_generator::to_png_to_vec("Hello world!", QrCodeEcc::Low, 1024).unwrap();
+
+    let content_type = String::from("image/png");
+
+    // convert the `Stream` into an `axum::body::HttpBody`
+    let body = Body::from(result);
+
+    let headers = [
+        (header::CONTENT_TYPE, content_type),
+        (
+            header::CONTENT_DISPOSITION,
+            String::from("attachment; filename=\"qrcode.png\""),
+            //&format!("attachment; filename=\"{:?}\"", "qrcode.ong"),
+        ),
+    ];
+    Ok((headers, result))
 }
