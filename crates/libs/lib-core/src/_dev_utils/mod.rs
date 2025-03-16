@@ -63,6 +63,7 @@ pub async fn seed_tasks(
 	ctx: &Ctx,
 	mm: &ModelManager,
 	project_id: i64,
+	task_id: Option<i64>,
 	titles: &[&str],
 ) -> model::Result<Vec<Task>> {
 	let mut tasks = Vec::new();
@@ -73,6 +74,7 @@ pub async fn seed_tasks(
 			mm,
 			TaskForCreate {
 				project_id,
+				task_id,
 				title: title.to_string(),
 			},
 		)
@@ -89,6 +91,7 @@ pub async fn seed_task(
 	ctx: &Ctx,
 	mm: &ModelManager,
 	project_id: i64,
+	task_id: Option<i64>,
 	title: &str,
 ) -> model::Result<i64> {
 	let id = TaskBmc::create(
@@ -96,6 +99,7 @@ pub async fn seed_task(
 		mm,
 		TaskForCreate {
 			project_id,
+			task_id,
 			title: title.to_string(),
 		},
 	)

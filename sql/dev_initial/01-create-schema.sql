@@ -44,6 +44,8 @@ CREATE TABLE task (
 
   -- FK
   project_id BIGINT NOT NULL,
+  -- FK can be null
+  task_id BIGINT NULL,
   
   -- Properties
   title varchar(256) NOT NULL,

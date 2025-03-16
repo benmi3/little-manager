@@ -159,10 +159,12 @@ mod tests {
 			"test_create_ok project for time record ",
 		)
 		.await?;
+		let fx_task_id: Option<i64> = None;
 		let fx_task_id = _dev_utils::seed_task(
 			&ctx,
 			&mm,
 			fx_project_id,
+			fx_task_id,
 			"test_create_ok task for time record ",
 		)
 		.await?;
@@ -228,10 +230,12 @@ mod tests {
 			"test_list_all_ok project for tasktime",
 		)
 		.await?;
+		let fx_task_id: Option<i64> = None;
 		let fx_task_id = _dev_utils::seed_task(
 			&ctx,
 			&mm,
 			fx_project_id,
+			fx_task_id,
 			"test_create_ok task for tasktime ",
 		)
 		.await?;
@@ -272,10 +276,12 @@ mod tests {
 			"test_list_by_title_contains_ok project for tasktimes ",
 		)
 		.await?;
+		let fx_task_id: Option<i64> = None;
 		let fx_task_id = _dev_utils::seed_task(
 			&ctx,
 			&mm,
 			fx_project_id,
+			fx_task_id,
 			"test_list_by_progress_contains_ok task for tasktimes",
 		)
 		.await?;
@@ -322,11 +328,12 @@ mod tests {
 			"test_list_with_list_options_ok project for tasktime ",
 		)
 		.await?;
-
+		let fx_task_id: Option<i64> = None;
 		let fx_task_id = _dev_utils::seed_task(
 			&ctx,
 			&mm,
 			fx_project_id,
+			fx_task_id,
 			"test_list_with_list_options_ok task for tasktime",
 		)
 		.await?;
@@ -380,10 +387,12 @@ mod tests {
 			"test_update_ok project for tasktime",
 		)
 		.await?;
+		let fx_task_id: Option<i64> = None;
 		let fx_task_id = _dev_utils::seed_task(
 			&ctx,
 			&mm,
 			fx_project_id,
+			fx_task_id,
 			"test_update_ok task for tasktime",
 		)
 		.await?;
@@ -427,11 +436,12 @@ mod tests {
 			"project for tasktime test_list_by_ctime_ok",
 		)
 		.await?;
-
+		let fx_task_id: Option<i64> = None;
 		let fx_task_id = _dev_utils::seed_task(
 			&ctx,
 			&mm,
 			fx_project_id,
+			fx_task_id,
 			"task for tasktime test_list_by_ctime_ok",
 		)
 		.await?;

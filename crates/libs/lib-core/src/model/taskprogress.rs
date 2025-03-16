@@ -126,10 +126,12 @@ mod tests {
 		let fx_project_id =
 			_dev_utils::seed_project(&ctx, &mm, "test_create_ok project for task ")
 				.await?;
+		let fx_task_id: Option<i64> = None;
 		let fx_task_id = _dev_utils::seed_task(
 			&ctx,
 			&mm,
 			fx_project_id,
+			fx_task_id,
 			"test_create_ok task for taskprogress",
 		)
 		.await?;
@@ -187,10 +189,12 @@ mod tests {
 		let fx_project_id =
 			_dev_utils::seed_project(&ctx, &mm, "test_list_all_ok project for task")
 				.await?;
+		let fx_task_id: Option<i64> = None;
 		let fx_task_id = _dev_utils::seed_task(
 			&ctx,
 			&mm,
 			fx_project_id,
+			fx_task_id,
 			"test_list_all_ok task for taskprogress",
 		)
 		.await?;
@@ -231,10 +235,12 @@ mod tests {
 			"test_list_by_title_contains_ok project for task ",
 		)
 		.await?;
+		let fx_task_id: Option<i64> = None;
 		let fx_task_id = _dev_utils::seed_task(
 			&ctx,
 			&mm,
 			fx_project_id,
+			fx_task_id,
 			"test_list_all_ok task for taskprogress",
 		)
 		.await?;
@@ -275,9 +281,12 @@ mod tests {
 			"test_list_with_list_options_ok project for task ",
 		)
 		.await?;
-		_dev_utils::seed_tasks(&ctx, &mm, fx_project_id, fx_titles).await?;
+		let fx_task_id: Option<i64> = None;
+		_dev_utils::seed_tasks(&ctx, &mm, fx_project_id, fx_task_id, fx_titles)
+			.await?;
 		let fx_tasks =
-			_dev_utils::seed_tasks(&ctx, &mm, fx_project_id, fx_titles).await?;
+			_dev_utils::seed_tasks(&ctx, &mm, fx_project_id, fx_task_id, fx_titles)
+				.await?;
 
 		// -- Iterate
 		for fx_task in fx_tasks {
@@ -331,10 +340,12 @@ mod tests {
 			"test_update_ok project for taskprogress",
 		)
 		.await?;
+		let fx_task_id: Option<i64> = None;
 		let fx_task_id = _dev_utils::seed_task(
 			&ctx,
 			&mm,
 			fx_project_id,
+			fx_task_id,
 			"test_update_ok - task 01 for taskprogress",
 		)
 		.await?;
@@ -380,10 +391,12 @@ mod tests {
 			"project for tasks test_list_by_ctime_ok",
 		)
 		.await?;
+		let fx_task_id: Option<i64> = None;
 		let fx_task_id = _dev_utils::seed_task(
 			&ctx,
 			&mm,
 			fx_project_id,
+			fx_task_id,
 			"test_list_by_ctime_ok 01.1",
 		)
 		.await?;

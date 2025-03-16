@@ -19,6 +19,7 @@ use sqlx::FromRow;
 pub struct Task {
 	pub id: i64,
 	pub project_id: i64,
+	pub task_id: Option<i64>,
 
 	pub title: String,
 	pub done: bool,
@@ -37,6 +38,7 @@ pub struct Task {
 pub struct TaskForCreate {
 	pub title: String,
 	pub project_id: i64,
+	pub task_id: Option<i64>,
 }
 
 #[derive(Fields, Deserialize, Default)]
@@ -49,6 +51,7 @@ pub struct TaskForUpdate {
 pub struct TaskFilter {
 	id: Option<OpValsInt64>,
 	project_id: Option<OpValsInt64>,
+	task_id: Option<OpValsInt64>,
 	title: Option<OpValsString>,
 	done: Option<OpValsBool>,
 
@@ -130,10 +133,12 @@ mod tests {
 		let fx_project_id =
 			_dev_utils::seed_project(&ctx, &mm, "test_create_ok project for task ")
 				.await?;
+		let fx_task_id: Option<i64> = None;
 
 		// -- Exec
 		let task_c = TaskForCreate {
 			project_id: fx_project_id,
+			task_id: fx_task_id,
 			title: fx_title.to_string(),
 		};
 		let id = TaskBmc::create(&ctx, &mm, task_c).await?;
@@ -184,7 +189,9 @@ mod tests {
 		let fx_project_id =
 			_dev_utils::seed_project(&ctx, &mm, "test_list_all_ok project for task")
 				.await?;
-		_dev_utils::seed_tasks(&ctx, &mm, fx_project_id, fx_titles).await?;
+		let fx_task_id: Option<i64> = None;
+		_dev_utils::seed_tasks(&ctx, &mm, fx_project_id, fx_task_id, fx_titles)
+			.await?;
 
 		// -- Exec
 		let filter = TaskFilter {
@@ -219,7 +226,9 @@ mod tests {
 			"test_list_by_title_contains_ok project for task ",
 		)
 		.await?;
-		_dev_utils::seed_tasks(&ctx, &mm, fx_project_id, fx_titles).await?;
+		let fx_task_id: Option<i64> = None;
+		_dev_utils::seed_tasks(&ctx, &mm, fx_project_id, fx_task_id, fx_titles)
+			.await?;
 
 		// -- Exec
 		let filter = TaskFilter {
@@ -257,7 +266,9 @@ mod tests {
 			"test_list_with_list_options_ok project for task ",
 		)
 		.await?;
-		_dev_utils::seed_tasks(&ctx, &mm, fx_project_id, fx_titles).await?;
+		let fx_task_id: Option<i64> = None;
+		_dev_utils::seed_tasks(&ctx, &mm, fx_project_id, fx_task_id, fx_titles)
+			.await?;
 
 		// -- Exec
 		let filter: TaskFilter = TaskFilter {
@@ -302,9 +313,16 @@ mod tests {
 		let fx_project_id =
 			_dev_utils::seed_project(&ctx, &mm, "test_update_ok project for task")
 				.await?;
-		let fx_task = _dev_utils::seed_tasks(&ctx, &mm, fx_project_id, &[fx_title])
-			.await?
-			.remove(0);
+		let fx_task_id: Option<i64> = None;
+		let fx_task = _dev_utils::seed_tasks(
+			&ctx,
+			&mm,
+			fx_project_id,
+			fx_task_id,
+			&[fx_title],
+		)
+		.await?
+		.remove(0);
 
 		// -- Exec
 		TaskBmc::update(
@@ -345,13 +363,16 @@ mod tests {
 			"test_list_by_ctime_ok 01.2",
 			"test_list_by_ctime_ok 01.3",
 		];
-		_dev_utils::seed_tasks(&ctx, &mm, fx_project_id, fx_titles_01).await?;
+		let fx_task_id: Option<i64> = None;
+		_dev_utils::seed_tasks(&ctx, &mm, fx_project_id, fx_task_id, fx_titles_01)
+			.await?;
 
 		let time_marker = format_time(now_utc());
 		sleep(Duration::from_millis(300)).await;
 		let fx_titles_02 =
 			&["test_list_by_ctime_ok 02.1", "test_list_by_ctime_ok 02.2"];
-		_dev_utils::seed_tasks(&ctx, &mm, fx_project_id, fx_titles_02).await?;
+		_dev_utils::seed_tasks(&ctx, &mm, fx_project_id, fx_task_id, fx_titles_02)
+			.await?;
 
 		// -- Exec
 		let filter_json = json! ({
