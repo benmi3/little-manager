@@ -33,3 +33,4 @@ derive_more = { workspace = true }
 
 [dev-dependencies]
 httpc-test = "0.1"
+anyhow = "1.0.97"
