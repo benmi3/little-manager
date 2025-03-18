@@ -1,11 +1,12 @@
 <script setup>
 import { ref } from 'vue'
 
-const text = ref('Edit me')
+const projectName = ref('Edit me')
+const projectID = ref(0)
 </script>
 
 <template>
   <h2>Text Input</h2>
-  <input v - model="text">
-  <p>{{ text }}</p>
+  <input v - model="projectName">
+  <p>Project ID:{{ projectID }}</p>
 </template>
