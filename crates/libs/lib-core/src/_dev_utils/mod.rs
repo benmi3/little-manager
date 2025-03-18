@@ -54,6 +54,7 @@ pub async fn seed_project(
 		mm,
 		ProjectForCreate {
 			name: name.to_string(),
+			group_id: 0,
 		},
 	)
 	.await

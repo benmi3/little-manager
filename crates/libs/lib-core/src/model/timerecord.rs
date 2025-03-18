@@ -1,4 +1,5 @@
 use crate::ctx::Ctx;
+use crate::generate_common_bmc_fns;
 use crate::model::base::{self, DbBmc};
 use crate::model::modql_utils::time_to_sea_value;
 use crate::model::ModelManager;
@@ -79,41 +80,13 @@ impl DbBmc for TimeRecordBmc {
 	const TABLE: &'static str = "timerecord";
 }
 
-impl TimeRecordBmc {
-	pub async fn create(
-		ctx: &Ctx,
-		mm: &ModelManager,
-		timerecord_c: TimeRecordForCreate,
-	) -> Result<i64> {
-		base::create::<Self, _>(ctx, mm, timerecord_c).await
-	}
-
-	pub async fn get(ctx: &Ctx, mm: &ModelManager, id: i64) -> Result<TimeRecord> {
-		base::get::<Self, _>(ctx, mm, id).await
-	}
-
-	pub async fn list(
-		ctx: &Ctx,
-		mm: &ModelManager,
-		filter: Option<Vec<TimeRecordFilter>>,
-		list_options: Option<ListOptions>,
-	) -> Result<Vec<TimeRecord>> {
-		base::list::<Self, _, _>(ctx, mm, filter, list_options).await
-	}
-
-	pub async fn update(
-		ctx: &Ctx,
-		mm: &ModelManager,
-		id: i64,
-		timerecord_u: TimeRecordForUpdate,
-	) -> Result<()> {
-		base::update::<Self, _>(ctx, mm, id, timerecord_u).await
-	}
-
-	pub async fn delete(ctx: &Ctx, mm: &ModelManager, id: i64) -> Result<()> {
-		base::delete::<Self>(ctx, mm, id).await
-	}
-}
+generate_common_bmc_fns!(
+	Bmc: TimeRecordBmc,
+	Entity: TimeRecord,
+	ForCreate: TimeRecordForCreate,
+	ForUpdate: TimeRecordForUpdate,
+	Filter: TimeRecordFilter,
+);
 // endregion: --- TimeRecordBmc
 
 // region: --- TimeRecordPreFormat

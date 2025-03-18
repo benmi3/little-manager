@@ -26,7 +26,8 @@ async fn main() -> Result<()> {
 			"method": "create_project",
 			"params": {
 				"data": {
-					"name": "project AAA"
+					"name": "project AAA",
+				"group_id": 0
 				}
 			}
 		}),

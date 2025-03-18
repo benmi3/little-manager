@@ -23,6 +23,8 @@ mod base;
 mod error;
 mod store;
 
+pub mod group;
+pub mod groupmembers;
 pub mod modql_utils;
 pub mod project;
 pub mod task;

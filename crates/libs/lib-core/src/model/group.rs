@@ -15,11 +15,10 @@ use sqlx::FromRow;
 // region:    --- Project Types
 #[serde_as]
 #[derive(Debug, Clone, Fields, FromRow, Serialize)]
-pub struct Project {
+pub struct Group {
 	pub id: i64,
 
 	pub owner_id: i64,
-	pub group_id: i64,
 	pub name: String,
 
 	// -- Timestamps
@@ -33,16 +32,14 @@ pub struct Project {
 }
 
 #[derive(Fields, Deserialize)]
-pub struct ProjectForCreate {
+pub struct GroupForCreate {
 	pub name: String,
-	pub group_id: i64,
 }
 
 #[derive(Fields, Deserialize)]
-pub struct ProjectForUpdate {
+pub struct GroupForUpdate {
 	pub name: Option<String>,
 	pub owner_id: Option<i64>,
-	pub group_id: Option<i64>,
 }
 
 /// The `ProjectForCreateInner` contains all necessary properties
@@ -54,18 +51,15 @@ pub struct ProjectForUpdate {
 ///       and `ProjectForCreateInner` (the representation of the data to be executed, i.e., inserted).
 /// (e.g., `owner_id` which is a db required field)
 #[derive(Fields)]
-struct ProjectForCreateInner {
+struct GroupForCreateInner {
 	pub name: String,
 	pub owner_id: i64,
-	pub group_id: i64,
 }
 
 #[derive(FilterNodes, Default, Deserialize)]
-pub struct ProjectFilter {
+pub struct GroupFilter {
 	id: Option<OpValsInt64>,
 	name: Option<OpValsString>,
-	owner_id: Option<OpValsInt64>,
-	group_id: Option<OpValsInt64>,
 
 	cid: Option<OpValsInt64>,
 	#[modql(to_sea_value_fn = "time_to_sea_value")]
@@ -77,36 +71,35 @@ pub struct ProjectFilter {
 // endregion: --- Project Types
 
 // region:    --- ProjectBmc
-pub struct ProjectBmc;
+pub struct GroupBmc;
 
-impl DbBmc for ProjectBmc {
-	const TABLE: &'static str = "project";
+impl DbBmc for GroupBmc {
+	const TABLE: &'static str = "usergroup";
 }
 
-impl ProjectBmc {
+impl GroupBmc {
 	pub async fn create(
 		ctx: &Ctx,
 		mm: &ModelManager,
-		project_c: ProjectForCreate,
+		project_c: GroupForCreate,
 	) -> Result<i64> {
-		let project_c = ProjectForCreateInner {
+		let project_c = GroupForCreateInner {
 			name: project_c.name,
 			owner_id: ctx.user_id(),
-			group_id: project_c.group_id,
 		};
 		base::create::<Self, _>(ctx, mm, project_c).await
 	}
 
-	pub async fn get(ctx: &Ctx, mm: &ModelManager, id: i64) -> Result<Project> {
+	pub async fn get(ctx: &Ctx, mm: &ModelManager, id: i64) -> Result<Group> {
 		base::get::<Self, _>(ctx, mm, id).await
 	}
 
 	pub async fn list(
 		ctx: &Ctx,
 		mm: &ModelManager,
-		filter: Option<Vec<ProjectFilter>>,
+		filter: Option<Vec<GroupFilter>>,
 		list_options: Option<ListOptions>,
-	) -> Result<Vec<Project>> {
+	) -> Result<Vec<Group>> {
 		base::list::<Self, _, _>(ctx, mm, filter, list_options).await
 	}
 
@@ -114,7 +107,7 @@ impl ProjectBmc {
 		ctx: &Ctx,
 		mm: &ModelManager,
 		id: i64,
-		project_u: ProjectForUpdate,
+		project_u: GroupForUpdate,
 	) -> Result<()> {
 		base::update::<Self, _>(ctx, mm, id, project_u).await
 	}

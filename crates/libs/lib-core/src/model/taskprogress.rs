@@ -1,4 +1,5 @@
 use crate::ctx::Ctx;
+use crate::generate_common_bmc_fns;
 use crate::model::base::{self, DbBmc};
 use crate::model::modql_utils::time_to_sea_value;
 use crate::model::ModelManager;
@@ -65,41 +66,14 @@ impl DbBmc for TaskProgressBmc {
 	const TABLE: &'static str = "taskprogress";
 }
 
-impl TaskProgressBmc {
-	pub async fn create(
-		ctx: &Ctx,
-		mm: &ModelManager,
-		taskprogress_c: TaskProgressForCreate,
-	) -> Result<i64> {
-		base::create::<Self, _>(ctx, mm, taskprogress_c).await
-	}
+generate_common_bmc_fns!(
+	Bmc: TaskProgressBmc,
+	Entity: TaskProgress,
+	ForCreate: TaskProgressForCreate,
+	ForUpdate: TaskProgressForUpdate,
+	Filter: TaskProgressFilter,
+);
 
-	pub async fn get(ctx: &Ctx, mm: &ModelManager, id: i64) -> Result<TaskProgress> {
-		base::get::<Self, _>(ctx, mm, id).await
-	}
-
-	pub async fn list(
-		ctx: &Ctx,
-		mm: &ModelManager,
-		filter: Option<Vec<TaskProgressFilter>>,
-		list_options: Option<ListOptions>,
-	) -> Result<Vec<TaskProgress>> {
-		base::list::<Self, _, _>(ctx, mm, filter, list_options).await
-	}
-
-	pub async fn update(
-		ctx: &Ctx,
-		mm: &ModelManager,
-		id: i64,
-		taskprogress_u: TaskProgressForUpdate,
-	) -> Result<()> {
-		base::update::<Self, _>(ctx, mm, id, taskprogress_u).await
-	}
-
-	pub async fn delete(ctx: &Ctx, mm: &ModelManager, id: i64) -> Result<()> {
-		base::delete::<Self>(ctx, mm, id).await
-	}
-}
 // endregion: --- TaskBmc
 
 // region:    --- Tests
@@ -362,7 +336,6 @@ mod tests {
 			fx_taskprogress.id,
 			TaskProgressForUpdate {
 				progress: fx_progress_new,
-				..Default::default()
 			},
 		)
 		.await?;

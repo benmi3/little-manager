@@ -84,13 +84,13 @@ macro_rules! generate_common_bmc_fns {
 					base::delete::<Self>(ctx, mm, id).await
 				}
 
-				pub async fn delete_many(
-					ctx: &Ctx,
-					mm: &ModelManager,
-					ids: Vec<i64>,
-				) -> Result<u64> {
-					base::delete_many::<Self>(ctx, mm, ids).await
-				}
+				// pub async fn delete_many(
+				// 	ctx: &Ctx,
+				// 	mm: &ModelManager,
+				// 	ids: Vec<i64>,
+				// ) -> Result<u64> {
+				// 	base::delete_many::<Self>(ctx, mm, ids).await
+				// }
 		}
 	};
 }
