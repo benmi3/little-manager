@@ -1,4 +1,4 @@
-sonar.projectKey=benmi_little-manager
+sonar.projectKey=benmi_little_manager
 sonar.organization=benmi
 # This is the name and version displayed in the SonarCloud UI.
 sonar.projectName=Little-manager
