@@ -1,0 +1,21 @@
+project_name: jobbtid
+
+builds:
+  - env: [KEEP=0]
+    builder: rust
+    targets: ["x86_64-unknown-linux-gnu"]
+
+
+# dockers:
+#   - image_templates: ["registry.gitlab.com/benmi/little-manager:{{ .Version }}"]
+#     dockerfile: deploy/Containerfile
+#     build_flag_templates:
+#       - --label=org.opencontainers.image.title={{ .ProjectName }}
+#       - --label=org.opencontainers.image.description={{ .ProjectName }}
+#       - --label=org.opencontainers.image.url=https://gitlab.com/benmi/little-manager
+#       - --label=org.opencontainers.image.source=https://gitlab.com/benmi/little-manager
+#       - --label=org.opencontainers.image.version={{ .Version }}
+#       - --label=org.opencontainers.image.created={{ time "2006-01-02T15:04:05Z07:00" }}
+#       - --label=org.opencontainers.image.revision={{ .FullCommit }}
+#       - --label=org.opencontainers.image.licenses=MIT
+

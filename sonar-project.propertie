@@ -1,0 +1,15 @@
+sonar.projectKey=benmi_little-manager
+sonar.organization=benmi
+# This is the name and version displayed in the SonarCloud UI.
+sonar.projectName=Little-manager
+sonar.projectVersion=0.0
+# Path is relative to the sonar-project.properties file.
+sonar.language=rust
+#sonar.sources=.
+#sonar.exclusions=
+#sonar.tests=.
+#sonar.test.inclusions=
+#sonar.go.coverage.reportPaths=./coverage.out
+#sonar.go.coverage.minimumCoverage=80
+#sonar.test.exclusions=**/*_test.go,**/mocks/**,**/vendor/**
+
