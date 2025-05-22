@@ -11,13 +11,13 @@ use serde_json::{json, Value};
 use tower_cookies::Cookies;
 use tracing::debug;
 
-// region:    --- Login
-pub async fn api_login_handler(
+// region:    --- Sign in
+pub async fn api_sign_in_handler(
 	State(mm): State<ModelManager>,
 	cookies: Cookies,
 	Json(payload): Json<LoginPayload>,
 ) -> Result<Json<Value>> {
-	debug!("{:<12} - api_login_handler", "HANDLER");
+	debug!("{:<12} - api_sign_in_handler", "HANDLER");
 
 	let LoginPayload {
 		username,
@@ -70,14 +70,14 @@ pub struct LoginPayload {
 	username: String,
 	pwd: String,
 }
-// endregion: --- Login
+// endregion: --- Sign in
 
-// region:    --- Logoff
-pub async fn api_logoff_handler(
+// region:    --- Sign out
+pub async fn api_sign_out_handler(
 	cookies: Cookies,
 	Json(payload): Json<LogoffPayload>,
 ) -> Result<Json<Value>> {
-	debug!("{:<12} - api_logoff_handler", "HANDLER");
+	debug!("{:<12} - api_sign_out_handler", "HANDLER");
 	let should_logoff = payload.logoff;
 
 	if should_logoff {
@@ -98,4 +98,4 @@ pub async fn api_logoff_handler(
 pub struct LogoffPayload {
 	logoff: bool,
 }
-// endregion: --- Logoff
+// endregion: --- Sign out
