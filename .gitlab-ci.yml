@@ -6,29 +6,38 @@
 # Note that environment variables can be set in several places
 # See https://docs.gitlab.com/ee/ci/variables/#cicd-variable-precedence
 stages:
-  # - test
+  - test
   - codescan-1
   - codescan-2
   - release 
-# test:
-#   stage: test
-#   image: golang:latest
-#   script:
-#     - go test -race -covermode=atomic -coverprofile=coverage.out ./...
-#   artifacts:
-#     # Save the coverage report file as an artifact
-#     paths:
-#       - coverage.out
-#     expire_in: 1 week
-#     when: always
-# #  allow_failure: true # temp
-#   only:
-#     - merge_requests
-#     - master
-#     - develop
-#     - main
-#     - dev
-#
+test:
+  stage: test
+  services:
+    - name: postgres
+      alias: db
+  
+  image: rust:latest
+  script:
+    - "cargo test -- --nocapture > coverage.out"
+  artifacts:
+    # Save the coverage report file as an artifact
+    paths:
+      - coverage.out
+    expire_in: 1 week
+    when: always
+#  allow_failure: true # temp
+  only:
+    - merge_requests
+    - master
+    - develop
+    - main
+    - dev
+
+variables:
+  POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+  # POSTGRES_HOST_AUTH_METHOD: trust
+  SERVICE_DB_URL: "postgres://postgres:$POSTGRES_PASSWORD@db/app_db"
+
 sast:
   stage: codescan-1
 include:
