@@ -24,12 +24,13 @@ test:
     - echo "Waiting for PostgreSQL to be ready..."
     # A simple wait loop. For robust checks, use a tool like pg_isready if available in your image.
     - |
-      timeout 30s bash -c 
+      timeout 30s bash -c '
       until pg_isready -h pg -p 5432 -U postgres; do # Use 'postgres' as default user unless you set POSTGRES_USER
         echo "Postgres is unavailable - sleeping"
         sleep 1
       done
       echo "Postgres is up - executing command"
+      '
     - echo "PostgreSQL service is running with POSTGRES_PASSWORD set."
     - "cargo test -- --nocapture > coverage.out"
   artifacts:
