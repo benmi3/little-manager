@@ -10,16 +10,26 @@ stages:
   - codescan-1
   - codescan-2
   - release 
+
+image: rust:latest
+
+variables:
+  POSTGRES_DB: $POSTGRES_DB
+  POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+  POSTGRES_HOST_AUTH_METHOD: trust
+  SERVICE_DB_URL: "postgres://postgres:$POSTGRES_PASSWORD@postgres/app_db"
+
+services:
+  - name: postgres
+    alias: postgres
+    variables:
+      POSTGRES_DB: $POSTGRES_DB
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+      POSTGRES_HOST_AUTH_METHOD: trust
+
 test:
   stage: test
-  services:
-    - name: postgres
-      alias: db
-      variables:
-        POSTGRES_PASSWORD: $POSTGRES_PASSWORD
-        POSTGRES_HOST_AUTH_METHOD: trust
-  
-  image: rust:latest
+  image: rust:latest 
   script:
     - "cargo test -- --nocapture > coverage.out"
   artifacts:
@@ -36,10 +46,7 @@ test:
     - main
     - dev
 
-variables:
-  POSTGRES_PASSWORD: $POSTGRES_PASSWORD
-  # POSTGRES_HOST_AUTH_METHOD: trust
-  SERVICE_DB_URL: "postgres://postgres:$POSTGRES_PASSWORD@db/app_db"
+
 
 sast:
   stage: codescan-1
