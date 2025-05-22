@@ -17,7 +17,7 @@ variables:
   POSTGRES_DB: $POSTGRES_DB
   POSTGRES_PASSWORD: $POSTGRES_PASSWORD
   POSTGRES_HOST_AUTH_METHOD: trust
-  SERVICE_DB_URL: "postgres://postgres:$POSTGRES_PASSWORD@postgres/app_db"
+  SERVICE_DB_URL: "postgres://postgres:$POSTGRES_PASSWORD@postgres/$POSTGRES_DB"
 
 services:
   - name: postgres
@@ -30,7 +30,24 @@ services:
 test:
   stage: test
   image: rust:latest 
+  before_script:
+    - apt-get update && apt-get install -y postgresql-client || echo "Failed to install postgresql-client, pg_isready might not be available"
   script:
+    - echo "Waiting for PostgreSQL to be ready..."
+    - |
+      timeout 60s bash -c '
+      # Try pg_isready if it was installed
+      if command -v pg_isready &> /dev/null; then
+        until pg_isready -h postgres -p 5432 -U postgres -d "${POSTGRES_DB:-app_db}"; do # Use postgres as default user
+          echo "Postgres is unavailable - sleeping"
+          sleep 2
+        done
+      else # Fallback to a simple sleep if pg_isready is not available
+        echo "pg_isready not found, sleeping for 15 seconds as a fallback..."
+        sleep 15
+      fi
+      echo "Postgres should be up - executing tests"
+      '
     - "cargo test -- --nocapture > coverage.out"
   artifacts:
     # Save the coverage report file as an artifact
