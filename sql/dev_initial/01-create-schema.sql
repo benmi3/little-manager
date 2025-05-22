@@ -61,6 +61,7 @@ CREATE TABLE project (
 
   -- Properties
   owner_id BIGINT NOT NULL,
+  group_id BIGINT NOT NULL,
   name varchar(256) NOT NULL,
 
   -- Timestamps
