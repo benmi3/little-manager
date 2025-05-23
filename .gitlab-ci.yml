@@ -48,7 +48,7 @@ test:
       fi
       echo "Postgres should be up - executing tests"
       '
-    - "cargo test -- --nocapture > coverage.out"
+    - "cargo test -- --nocapture --test-threads=1 > coverage.out"
   artifacts:
     # Save the coverage report file as an artifact
     paths:
