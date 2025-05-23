@@ -8,16 +8,20 @@ async function doSignin(e) {
     "Content-Type": "application/json",
   };
   const body = JSON.stringify({
-    "username": user.value,
-    "pwd": pass.value,
+    "signout": true
   })
-  const res = await fetch("/api/signin", { headers: headers, method: "POST", body: body })
+  const res = await fetch("/api/signout", { headers: headers, method: "POST", body: body })
   const json_res = await res.json()
   if (json_res && json_res["result"]) {
-    const succ = json_res["result"]["success"]
-    if (succ === true) {
-      console.log("You are now logged in!");
-      window.location.href = "home.html"
+    const sign_out = json_res["result"]["sign_out"]
+    if (sign_out != true) {
+      alert("Failed at signing out");
+    }
+    window.location.href = "signin.html";
+  }
+  {
+    "result": {
+      "sign_out": true
     }
   }
 

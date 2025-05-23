@@ -78,16 +78,16 @@ pub async fn api_sign_out_handler(
 	Json(payload): Json<LogoffPayload>,
 ) -> Result<Json<Value>> {
 	debug!("{:<12} - api_sign_out_handler", "HANDLER");
-	let should_logoff = payload.logoff;
+	let should_signout = payload.signout;
 
-	if should_logoff {
+	if should_signout {
 		token::remove_token_cookie(&cookies)?;
 	}
 
 	// Create the success body.
 	let body = Json(json!({
 		"result": {
-			"logged_off": should_logoff
+			"sign_out": should_signout
 		}
 	}));
 
@@ -96,6 +96,6 @@ pub async fn api_sign_out_handler(
 
 #[derive(Debug, Deserialize)]
 pub struct LogoffPayload {
-	logoff: bool,
+	signout: bool,
 }
 // endregion: --- Sign out

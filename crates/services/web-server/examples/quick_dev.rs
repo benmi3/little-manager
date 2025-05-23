@@ -174,12 +174,12 @@ async fn main() -> Result<()> {
 	req_list_b_tasks.await?.print().await?;
 
 	let req_logoff = hc.do_post(
-		"/api/logoff",
+		"/api/signout",
 		json!({
-			"logoff": true
+			"signout": true
 		}),
 	);
-	// req_logoff.await?.print().await?;
+	req_logoff.await?.print().await?;
 
 	Ok(())
 }
