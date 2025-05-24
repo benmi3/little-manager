@@ -80,6 +80,15 @@ cargo test -- --nocapture
 cargo watch -q -c -x "test -p lib-core model::task::tests::test_create -- --nocapture"
 ```
 
+## Unit Test Export
+
+> Note: need to install [cargo-llvm-cov](https://github.com/taiki-e/cargo-llvm-cov) > `cargo +stable install cargo-llvm-cov --locked`
+
+```sh
+cargo llvm-cov --lcov --output-path lcov.info
+
+```
+
 ## Tools
 
 ```sh
