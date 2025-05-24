@@ -6,9 +6,10 @@ $(document).ready(function () {
       type: 'POST',
       contentType: 'application/json',
       data: function (_d) {
+        const uuid = self.crypto.randomUUID();
         const requestPayload = {
           "jsonrpc": "2.0",
-          "id": 1,
+          "id": uuid,
           "method": "list_timerecords",
           "params": {
             "filters": {
@@ -38,36 +39,53 @@ $(document).ready(function () {
       }
     },
     searching: false, // No search box
-    ordering: false,  // No column sorting
+    ordering: true,  // No column sorting
     paging: false,    // No pagination
     info: false,      // No "Showing x of y entries"
 
-    // 'columns' option is not needed here because we are not asking DataTables
-    // to render columns in the traditional way.
-
-    drawCallback: function (settings) {
-      const api = this.api();
-      const data = api.rows().data();
-
-      if (data && data.length > 0) {
-        for (let index = 0; index < data.length; index++) {
-          const projectData = data[index];
-
-          // Manually update the content of your <td> elements using the data-key attributes
-          $('#projectTable tbody td[data-key="projectName"]').text(projectData.projectName ?? 'N/A');
-          $('#projectTable tbody td[data-key="projectOwner"]').text(projectData.projectOwner ?? 'N/A');
-          $('#projectTable tbody td[data-key="projectCreation"]').text(projectData.projectCreation ?? 'N/A');
-          $('#projectTable tbody td[data-key="projectUpdated"]').text(projectData.projectUpdated ?? 'N/A');
+    columns: [
+      {
+        data: 'ctime',
+        defaultContent: 'N/A',
+        render: function (data, type, row) {
+          if (type === 'display' && data) {
+            return new Date(data).toLocaleDateString();
+          }
+          return data;
         }
-      } else {
-        if (!settings.jqXHR || settings.jqXHR.status === 200) { // Check if not an ajax error
-          $('#projectTable tbody td').text('No data available.');
+      },
+      { data: 'cid', defaultContent: 'N/A' },
+      { data: 'place', defaultContent: 'N/A' },
+      {
+        data: 'start_time',
+        defaultContent: 'N/A',
+        render: function (data, type, row) {
+          if (type === 'display' && data) {
+            return new Date(data).toLocaleTimeString();
+          }
+          return data;
+        }
+      },
+      {
+        data: 'stop_time',
+        defaultContent: 'N/A',
+        render: function (data, type, row) {
+          if (type === 'display' && data) {
+            return new Date(data).toLocaleTimeString();
+          }
+          return data;
         }
       }
+    ],
+
+    language: {
+      emptyTable: "There is no data available.",
+      infoEmpty: "No entries to show"
     },
+
 
   });
 
   // If you need to reload the data at some point (e.g., after an action):
-  // timerecordTable.ajax.reload();
+  // projectTable.ajax.reload();
 });

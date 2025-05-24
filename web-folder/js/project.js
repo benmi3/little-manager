@@ -6,9 +6,10 @@ $(document).ready(function () {
       type: 'POST',
       contentType: 'application/json',
       data: function (_d) {
+        const uuid = self.crypto.randomUUID();
         const requestPayload = {
           "jsonrpc": "2.0",
-          "id": 1,
+          "id": uuid,
           "method": "list_projects",
           "params": {
             "filters": {
