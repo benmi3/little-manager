@@ -63,12 +63,16 @@ stages:
 #     - main
 #     - dev
 
-
-
 sast:
   stage: codescan-1
+  rules:
+    - if: $CI_COMMIT_BRANCH
+      exists:
+        - '**/*.rs'
+        # include any other file extensions you need to scan from the semgrep-sast template: Jobs/SAST.gitlab-ci.yml
 include:
 - template: Security/SAST.gitlab-ci.yml
+- template: Jobs/SAST.gitlab-ci.yml
 
 variables:
   SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"  # Defines the location of the analysis task cache
