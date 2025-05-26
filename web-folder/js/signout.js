@@ -1,9 +1,7 @@
-async function doSignin(e) {
+async function doSignout(e) {
   e.preventDefault();
   console.log("Login Start --");
 
-  const user = document.getElementById("username");
-  const pass = document.getElementById("password");
   const headers = {
     "Content-Type": "application/json",
   };
@@ -18,11 +16,6 @@ async function doSignin(e) {
       alert("Failed at signing out");
     }
     window.location.href = "signin.html";
-  }
-  {
-    "result": {
-      "sign_out": true
-    }
   }
 
 

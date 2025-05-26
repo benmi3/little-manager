@@ -5,18 +5,33 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title></title>
+  <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" -->
+  <!--   integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous"> -->
+  <!-- <link href="https://cdn.datatables.net/v/bs5/jq-3.7.0/moment-2.29.4/dt-2.3.1/datatables.min.css" rel="stylesheet" -->
+  <!--   integrity="sha384-MCunX+Ty+/oF+JuJYbU27d0lnHOjm6zDpU4H9z8H5M0JNYk7yaMJ8637d23XvlPa" crossorigin="anonymous"> -->
+  <!---->
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js" -->
+  <!--   integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" -->
+  <!--   crossorigin="anonymous"></script> -->
+  <!-- <script src="https://cdn.datatables.net/v/bs5/jq-3.7.0/moment-2.29.4/dt-2.3.1/datatables.min.js" -->
+  <!--   integrity="sha384-qcTuRo7MNyRcxtv/F8sprVK91m+zh7Soq4BpwOjr9fsv/dcsleo6SSjzqPhIH9B2" -->
+  <!--   crossorigin="anonymous"></script> -->
+
+
   <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
-  <link href="https://cdn.datatables.net/v/bs5/jq-3.7.0/moment-2.29.4/dt-2.3.1/datatables.min.css" rel="stylesheet"
-    integrity="sha384-MCunX+Ty+/oF+JuJYbU27d0lnHOjm6zDpU4H9z8H5M0JNYk7yaMJ8637d23XvlPa" crossorigin="anonymous">
+  <link href="https://cdn.datatables.net/v/bs5/jq-3.7.0/dt-2.3.1/date-1.5.5/sl-3.0.0/datatables.min.css"
+    rel="stylesheet" integrity="sha384-gww3hYeLZi54IjBRe3uE1q1R5tIUkXDNoOvRHq+B/75JnI2DIsRV+AE+D+bUdzjz"
+    crossorigin="anonymous">
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"
     integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
     crossorigin="anonymous"></script>
-  <script src="https://cdn.datatables.net/v/bs5/jq-3.7.0/moment-2.29.4/dt-2.3.1/datatables.min.js"
-    integrity="sha384-qcTuRo7MNyRcxtv/F8sprVK91m+zh7Soq4BpwOjr9fsv/dcsleo6SSjzqPhIH9B2"
+  <script src="https://cdn.datatables.net/v/bs5/jq-3.7.0/dt-2.3.1/date-1.5.5/sl-3.0.0/datatables.min.js"
+    integrity="sha384-XKkbpqGgyl/OVZXv/dVFcv8ov+sE0TDHk1pz1e6NkPfFq2wfIDwZnv6W78WUkOFh"
     crossorigin="anonymous"></script>
 
+  <script src="js/common.js"></script>
   <script src="js/timerecord.js"></script>
   <script src="js/header.js" defer></script>
 </head>
@@ -41,6 +56,45 @@
         </tbody>
       </table>
     </div>
+    <div class="flex-shrink-0 p-3">
+      <form onsubmit="doTimeRecord(event)">
+        <div class="mb-3">
+          <label for="startDate" class="form-label">Start Date</label>
+          <input type="date" class="form-control" id="startDate" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="startTime" class="form-label">Start Time</label>
+          <input type="time" class="form-control" id="startTime" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="stopDate" class="form-label">Stop Date</label>
+          <input type="date" class="form-control" id="stopDate">
+        </div>
+
+        <div class="mb-3">
+          <label for="stopTime" class="form-label">Stop Time</label>
+          <input type="time" class="form-control" id="stopTime">
+        </div>
+
+        <div class="mb-3">
+          <label for="place" class="form-label">Place</label>
+          <input class="form-control" list="placeOptions" id="place" placeholder="Type to search or add new place">
+          <datalist id="placeOptions">
+            <option value="Office"></option>
+            <option value="Home"></option>
+            <option value="Client Site A"></option>
+            <option value="Cafe"></option>
+          </datalist>
+        </div>
+
+        <div class="d-grid gap-2">
+          <button type="submit" class="btn btn-primary btn-lg">Record Time</button>
+          <button type="reset" class="btn btn-primary btn-lg">Reset</button>
+        </div>
+      </form>
+      <div />
   </main>
 </body>
 
