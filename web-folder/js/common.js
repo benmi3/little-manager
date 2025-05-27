@@ -1,3 +1,6 @@
+const OK = true;
+const NG = false;
+
 function formatDateToYYYYMMDD(dateItem) {
   const year = dateItem.getFullYear();
   const month = (dateItem.getMonth() + 1).toString().padStart(2, '0');
@@ -18,3 +21,20 @@ function formatDateTimeYYYYMMDDHHMM(dateItem) {
 }
 
 function formatDateToRFC3339(dateItem) { const isoString = dateItem.toISOString(); return isoString.slice(0, 19) + 'Z'; }
+
+function getFirstDayMonth(dateItemIn) {
+  const dateItemOut = new Date(dateItemIn);
+  dateItemOut.setDate(1);
+  return dateItemOut;
+}
+
+function validateTime(startTime, stopTime) {
+  try {
+    return startTime.getTime() > stopTime.getTime() ? NG : OK
+  }
+  catch (e) {
+    console.log("ValidateTimeError:", e)
+    return NG
+  }
+}
+

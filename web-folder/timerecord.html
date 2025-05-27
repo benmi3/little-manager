@@ -60,7 +60,7 @@
       <form onsubmit="doTimeRecord(event)">
         <div class="mb-3">
           <label for="startDate" class="form-label">Start Date</label>
-          <input type="date" class="form-control" id="startDate" required>
+          <input type="date" class="form-control" id="startDate" onchange="updateFlagReset()" required>
         </div>
 
         <div class="mb-3">
@@ -84,15 +84,16 @@
           <datalist id="placeOptions">
             <option value="Office"></option>
             <option value="Home"></option>
-            <option value="Client Site A"></option>
-            <option value="Cafe"></option>
           </datalist>
         </div>
 
         <div class="d-grid gap-2">
           <button type="submit" class="btn btn-primary btn-lg">Record Time</button>
-          <button type="reset" class="btn btn-primary btn-lg">Reset</button>
+          <button type="reset" class="btn btn-primary btn-lg" onclick="resetForm()">Reset</button>
         </div>
+        <!-- hidden inputs -->
+        <input type="hidden" name="updateFlag" id="updateFlag" value="">
+        <input type="hidden" name="selectedValue" id="selectedValue" value="">
       </form>
       <div />
   </main>

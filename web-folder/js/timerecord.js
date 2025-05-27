@@ -3,15 +3,25 @@ let timerecordTable = null;
 async function doTimeRecord(e) {
   e.preventDefault();
 
+  // Hidden parameter section --
+  const updateFlag = document.getElementById("updateFlag").value;
+  const requestMethod = updateFlag == "UPDATE" ? "update_timerecord" : "create_timerecord"
+  // Start date --
   const startDate = document.getElementById("startDate").value;
   const startTime = document.getElementById("startTime").value;
   const startDateTime = new Date(startDate + " " + startTime)
-
+  // Stop date --
   const stopDate = document.getElementById("stopDate").value;
   const stopTime = document.getElementById("stopTime").value;
   const stopDateTime = new Date(stopDate + " " + stopTime)
-
+  if (validateTime(startDateTime, stopDateTime) === NG) {
+    alert("TimeValidation Error")
+    return;
+  }
+  // Place --
   const place = document.getElementById("place").value;
+  // Changed check
+  const selectedValue = JSON.parse(document.getElementById("selectedValue").value ?? "");
 
   const headers = {
     "Content-Type": "application/json",
@@ -20,7 +30,7 @@ async function doTimeRecord(e) {
   const body = JSON.stringify({
     "jsonrpc": "2.0",
     "id": uuid,
-    "method": "create_timerecord",
+    "method": requestMethod,
     "params": {
       "data": {
         "start_time": formatDateToRFC3339(startDateTime),
@@ -37,6 +47,7 @@ async function doTimeRecord(e) {
       timerecordTable.row.add(newRecord).draw();
     }
   }
+  return;
 }
 
 async function setSTime(start, setTime) {
@@ -48,14 +59,6 @@ async function setSTime(start, setTime) {
   y.value = formatTimeToHHMM(thisTime);
 }
 
-// Function to execute when a row is selected
-async function handleRowSelection(_e, dt, type, indexes) {
-  if (type === 'row') {
-    var rowData = dt.rows(indexes).data().toArray();
-    setSTime(true, rowData[0]["start_time"])
-    setSTime(false, rowData[0]["stop_time"])
-  }
-}
 
 async function setupPage() {
   const now = new Date(Date.now());
@@ -63,6 +66,11 @@ async function setupPage() {
   prev.setHours(now.getHours() - 1);
   setSTime(true, prev);
   setSTime(false, now);
+}
+
+async function resetForm() {
+  document.getElementById("place").value = "";
+  return setupPage();
 }
 
 
@@ -92,6 +100,46 @@ function populatePlaceDatalist(dataTable) {
   });
 }
 
+function timerecordFormatData(data) {
+  if (!data) return data;
+  const row_struct = { ctime: "", id: "", start_time: "", stop_time: "", place: "" }
+  const startdate = new Date(data[0]["ctime"]);
+  const enddate = new Date(data[-1]["stop_time"]);
+  const iteratordate = getFirstDayMonth(startdate);
+  const new_array = new Array();
+  while (iteratordate.getMonth() < enddate.getMonth() + 1) {
+    console.log("add another day");
+    const item = new row_struct;
+    item.ctime = formatDateTimeYYYYMMDDHHMM(iteratordate);
+    new_array.push(item);
+    iteratordate.setDate(iteratordate.getDate() + 1);
+  }
+
+  return new_array
+}
+
+function updateFlagSet(val) {
+  document.getElementById("updateFlag").value = val;
+
+}
+
+function updateFlagReset() {
+  updateFlagSet("")
+}
+
+function selectedValueSet(val) {
+  document.getElementById("selectedValue").value = val;
+}
+
+async function handleRowSelection(_e, dt, type, indexes) {
+  if (type === 'row') {
+    var rowData = dt.rows(indexes).data().toArray();
+    setSTime(true, rowData[0]["start_time"]);
+    setSTime(false, rowData[0]["stop_time"]);
+    updateFlagSet(rowData[0]["id"]);
+    selectedValueSet(JSON.stringify(rowData[0]));
+  }
+}
 
 $(document).ready(function () {
   timerecordTable = new DataTable('#timerecordTable', {
