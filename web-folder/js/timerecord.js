@@ -5,7 +5,8 @@ async function doTimeRecord(e) {
 
   // Hidden parameter section --
   const updateFlag = document.getElementById("updateFlag").value;
-  const requestMethod = updateFlag == "UPDATE" ? "update_timerecord" : "create_timerecord"
+  const selectedValueEl = document.getElementById("selectedValue");
+  const selectedValue = selectedValueEl.value ? JSON.parse(selectedValueEl.value) : {};
   // Start date --
   const startDate = document.getElementById("startDate").value;
   const startTime = document.getElementById("startTime").value;
@@ -20,26 +21,30 @@ async function doTimeRecord(e) {
   }
   // Place --
   const place = document.getElementById("place").value;
-  // Changed check
-  const selectedValue = JSON.parse(document.getElementById("selectedValue").value ?? "");
+  // TODO: implement regex for place
+  //
+  //
+  const submitButton = document.getElementById("timerecordSubmit");
+  if (updateFlag != "" && selectedValue != {}) {
+    showHoverDialog(`Do you wish to update the entry for ${selectedValue["ctime"]} or create new?`,
+      submitButton,
+      { func: handleUpdateAction, params: [updateFlag, startDateTime, stopDateTime, place], textContent: "UPDATE" },
+      { func: handleCreateAction, params: [startDateTime, stopDateTime, place], textContent: "CREATE" })
+  } else {
+    return await handleCreateAction(startDateTime, stopDateTime, place);
+  }
+  return;
+}
 
-  const headers = {
-    "Content-Type": "application/json",
-  };
-  const uuid = self.crypto.randomUUID();
-  const body = JSON.stringify({
-    "jsonrpc": "2.0",
-    "id": uuid,
-    "method": requestMethod,
-    "params": {
-      "data": {
-        "start_time": formatDateToRFC3339(startDateTime),
-        "stop_time": formatDateToRFC3339(stopDateTime),
-        "place": place
-      }
+async function handleCreateAction(startDateTime, stopDateTime, place) {
+  params = {
+    "data": {
+      "start_time": formatDateToRFC3339(startDateTime),
+      "stop_time": formatDateToRFC3339(stopDateTime),
+      "place": place
     }
-  });
-  const res = await fetch("/api/rpc", { headers: headers, method: "POST", body: body })
+  };
+  const res = await doTimeRecordReq(params, "create_timerecord");
   const json_res = await res.json()
   if (json_res && json_res["result"]) {
     const newRecord = json_res["result"]["data"]
@@ -48,6 +53,46 @@ async function doTimeRecord(e) {
     }
   }
   return;
+}
+
+async function handleUpdateAction(id, startDateTime, stopDateTime, place) {
+  const selectedValue = JSON.parse(document.getElementById("selectedValue").value ?? "");
+  const data = {};
+  if (startDateTime != selectedValue["start_time"]) data["start_time"] = formatDateToRFC3339(stopDateTime);
+  if (stopDateTime != selectedValue["stop_time"]) data["stop_time"] = formatDateToRFC3339(stopDateTime);
+  if (place != selectedValue["place"]) data["place"] = place;
+  if (!data) {
+    // no reason to update if no values has changed
+    return;
+  }
+  params = {
+    "id": Number(id),
+    "data": data,
+  };
+  const res = await doTimeRecordReq(params, "update_timerecord");
+  // TODO: instead of adding, you need to find existing, then edit that
+  const json_res = await res.json()
+  if (json_res && json_res["result"]) {
+    const newRecord = json_res["result"]["data"]
+    if (newRecord) {
+      timerecordTable.row.add(newRecord).draw();
+    }
+  }
+  return;
+}
+
+async function doTimeRecordReq(params, requestMethod) {
+  const headers = {
+    "Content-Type": "application/json",
+  };
+  const uuid = self.crypto.randomUUID();
+  const body = JSON.stringify({
+    "jsonrpc": "2.0",
+    "id": uuid, // TODO: add user-id after UUID for bug request handeling
+    "method": requestMethod,
+    "params": params
+  });
+  return await fetch("/api/rpc", { headers: headers, method: "POST", body: body });
 }
 
 async function setSTime(start, setTime) {

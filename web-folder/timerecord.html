@@ -33,6 +33,7 @@
 
   <script src="js/common.js"></script>
   <script src="js/timerecord.js"></script>
+  <script src="js/dialog.js"></script>
   <script src="js/header.js" defer></script>
 </head>
 
@@ -88,12 +89,13 @@
         </div>
 
         <div class="d-grid gap-2">
-          <button type="submit" class="btn btn-primary btn-lg">Record Time</button>
+          <button type="submit" id="timerecordSubmit" class="btn btn-primary btn-lg">Record Time</button>
           <button type="reset" class="btn btn-primary btn-lg" onclick="resetForm()">Reset</button>
         </div>
         <!-- hidden inputs -->
         <input type="hidden" name="updateFlag" id="updateFlag" value="">
         <input type="hidden" name="selectedValue" id="selectedValue" value="">
+        <input type="hidden" name="messageArea" id="messageArea" value="">
       </form>
       <div />
   </main>
