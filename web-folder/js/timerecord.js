@@ -194,14 +194,18 @@ $(document).ready(function () {
       contentType: 'application/json',
       data: function (_d) {
         const uuid = self.crypto.randomUUID();
+        // TODO: Get First day of month and Last day of moth, and us that is filter
         const requestPayload = {
           "jsonrpc": "2.0",
           "id": uuid,
           "method": "list_timerecords",
           "params": {
             "filters": {
+              "start_time": { "$gte": formatDateToRFC3339(new Date("2025/5/1")), "$lte": formatDateToRFC3339(new Date("2025/6/1")) },
             },
             "list_options": {
+              //"order_bys": "start_time",
+              "limit": 300,
             }
           }
         };
@@ -226,7 +230,7 @@ $(document).ready(function () {
       }
     },
     searching: false, // No search box
-    ordering: true,  // No column sorting
+    ordering: false,  // No column sorting
     paging: false,    // No pagination
     info: false,      // No "Showing x of y entries"
 
@@ -236,11 +240,11 @@ $(document).ready(function () {
 
     columns: [
       {
-        data: 'ctime',
+        data: 'start_time',
         defaultContent: 'N/A',
         render: function (data, type, _row) {
           if (type === 'display' && data) {
-            return formatDateTimeYYYYMMDDHHMM(new Date(data));
+            return formatDateToYYYYMMDD(new Date(data));
           }
           return data;
         }
