@@ -28,6 +28,13 @@ function getFirstDayMonth(dateItemIn) {
   return dateItemOut;
 }
 
+function getLastDayMonth(dateItemIn) {
+  const dateItemOut = new Date(dateItemIn);
+  dateItemOut.setMonth(dateItemOut.getMonth() + 1);
+  dateItemOut.setDate(0);
+  return dateItemOut;
+}
+
 function validateTime(startTime, stopTime) {
   try {
     return startTime.getTime() > stopTime.getTime() ? NG : OK
@@ -38,3 +45,23 @@ function validateTime(startTime, stopTime) {
   }
 }
 
+
+function createRpcRequestBody(requestMethod, params) {
+  const uuid = self.crypto.randomUUID();
+  const body = JSON.stringify({
+    "jsonrpc": "2.0",
+    "id": uuid, // TODO: add user-id after UUID for bug request handeling
+    "method": requestMethod,
+    "params": params
+  });
+  return body;
+}
+
+
+// function storeUserName(username) {
+//   localStorage.setItem("username", username);
+// }
+
+function getUserName(_userId) {
+  return localStorage.getItem("username")
+}

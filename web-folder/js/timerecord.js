@@ -75,27 +75,24 @@ async function handleUpdateAction(id, startDateTime, stopDateTime, place) {
   if (json_res && json_res["result"]) {
     const newRecord = json_res["result"]["data"]
     if (newRecord) {
-      timerecordTable.row.add(newRecord).draw();
+      // timerecordTable.row.add(newRecord).draw();
+      timerecordTable.ajax.reload();
     }
   }
   return;
 }
+
 
 async function doTimeRecordReq(params, requestMethod) {
   const headers = {
     "Content-Type": "application/json",
   };
   const uuid = self.crypto.randomUUID();
-  const body = JSON.stringify({
-    "jsonrpc": "2.0",
-    "id": uuid, // TODO: add user-id after UUID for bug request handeling
-    "method": requestMethod,
-    "params": params
-  });
+  const body = createRpcRequestBody(requestMethod, params);
   return await fetch("/api/rpc", { headers: headers, method: "POST", body: body });
 }
 
-async function setSTime(start, setTime) {
+function setSTime(start, setTime) {
   const whatTime = start ? "start" : "stop";
   const thisTime = new Date(setTime);
   const x = document.getElementById(`${whatTime}Date`);
@@ -104,6 +101,11 @@ async function setSTime(start, setTime) {
   y.value = formatTimeToHHMM(thisTime);
 }
 
+
+function setPlace(place) {
+  const placeEl = document.getElementById("place");
+  placeEl.value = place;
+}
 
 async function setupPage() {
   const now = new Date(Date.now());
@@ -114,7 +116,7 @@ async function setupPage() {
 }
 
 async function resetForm() {
-  document.getElementById("place").value = "";
+  setPlace("");
   return setupPage();
 }
 
@@ -181,6 +183,7 @@ async function handleRowSelection(_e, dt, type, indexes) {
     var rowData = dt.rows(indexes).data().toArray();
     setSTime(true, rowData[0]["start_time"]);
     setSTime(false, rowData[0]["stop_time"]);
+    setPlace(rowData[0]["place"]);
     updateFlagSet(rowData[0]["id"]);
     selectedValueSet(JSON.stringify(rowData[0]));
   }
@@ -193,23 +196,21 @@ $(document).ready(function () {
       type: 'POST',
       contentType: 'application/json',
       data: function (_d) {
-        const uuid = self.crypto.randomUUID();
-        // TODO: Get First day of month and Last day of moth, and us that is filter
-        const requestPayload = {
-          "jsonrpc": "2.0",
-          "id": uuid,
-          "method": "list_timerecords",
-          "params": {
-            "filters": {
-              "start_time": { "$gte": formatDateToRFC3339(new Date("2025/5/1")), "$lte": formatDateToRFC3339(new Date("2025/6/1")) },
-            },
-            "list_options": {
-              //"order_bys": "start_time",
-              "limit": 300,
-            }
+        const today = new Date(Date.now());
+        const firstDay = getFirstDayMonth(today);
+        const lastDay = getLastDayMonth(today);
+        const gte = formatDateToRFC3339(firstDay);
+        const lte = formatDateToRFC3339(lastDay);
+        const params = {
+          "filters": {
+            "start_time": { "$gte": gte, "$lte": lte },
+          },
+          "list_options": {
+            "order_bys": "start_time",
+            "limit": 300,
           }
         };
-        return JSON.stringify(requestPayload);
+        return createRpcRequestBody("list_timerecords", params);
       },
       dataSrc: function (jsonResponse) {
         if (jsonResponse && jsonResponse.result && jsonResponse.result.data) {
@@ -229,10 +230,10 @@ $(document).ready(function () {
         $('#projectTable tbody td').text('Error loading data.');
       }
     },
-    searching: false, // No search box
-    ordering: false,  // No column sorting
-    paging: false,    // No pagination
-    info: false,      // No "Showing x of y entries"
+    searching: false, // search box
+    ordering: true,   // column sorting
+    paging: false,    // pagination
+    info: false,      // "Showing x of y entries"
 
     columnDefs: [
       { targets: 0, checkboxes: { selectRow: true } }
@@ -249,7 +250,16 @@ $(document).ready(function () {
           return data;
         }
       },
-      { data: 'cid', defaultContent: 'N/A' },
+      {
+        data: 'cid',
+        defaultContent: 'N/A',
+        render: function (data, type, _row) {
+          if (type === 'display' && data) {
+            return getUserName(data);
+          }
+          return data;
+        }
+      },
       { data: 'place', defaultContent: 'N/A' },
       {
         data: 'start_time',

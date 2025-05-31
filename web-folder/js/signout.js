@@ -18,7 +18,6 @@ async function doSignout(e) {
     window.location.href = "signin.html";
   }
 
-
   console.log("Login Stop --")
   return false
 }

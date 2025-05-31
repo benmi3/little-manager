@@ -193,7 +193,8 @@ function createHeader() {
   const accountLinks = [
     { href: '#', text: 'Profile' },
     { href: '#', text: 'Settings' },
-    { href: '#', text: 'Sign out' }
+    { href: '#', text: 'Administration' },
+    { href: 'signout.html', text: 'Sign out' }
   ];
   mainUl.appendChild(createCollapsibleMenuItem('Account', 'account-collapse', accountLinks));
 

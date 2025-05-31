@@ -3,12 +3,13 @@ async function doSignin(e) {
   console.log("Login Start --");
 
   const user = document.getElementById("username");
+  const username = user.value;
   const pass = document.getElementById("password");
   const headers = {
     "Content-Type": "application/json",
   };
   const body = JSON.stringify({
-    "username": user.value,
+    "username": username,
     "pwd": pass.value,
   })
   const res = await fetch("/api/signin", { headers: headers, method: "POST", body: body })
@@ -17,6 +18,7 @@ async function doSignin(e) {
     const succ = json_res["result"]["success"]
     if (succ === true) {
       console.log("You are now logged in!");
+      localStorage.setItem("username", username);
       window.location.href = "home.html"
     }
   }
