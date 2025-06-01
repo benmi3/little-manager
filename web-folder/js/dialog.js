@@ -1,11 +1,6 @@
 let dialogElement = null;
 let hideDialogTimeout = null;
 
-
-/**
- * Creates and shows the hover dialog.
- * The dialog is positioned near the trigger element.
- */
 function showHoverDialog(quiestion, dialogArea, optionTrue, optionFalse) {
   // Clear any existing timeout to prevent premature hiding
   if (hideDialogTimeout) {
@@ -21,18 +16,18 @@ function showHoverDialog(quiestion, dialogArea, optionTrue, optionFalse) {
 
     // Dialog Text
     const textElement = document.createElement('p');
-    textElement.className = 'dialog-text';
+    textElement.className = '';
     textElement.textContent = quiestion;
     dialogElement.appendChild(textElement);
 
     // Dialog Buttons Container
     const buttonsContainer = document.createElement('div');
-    buttonsContainer.className = 'dialog-buttons';
+    buttonsContainer.className = 'd-grid gap-2';
 
     // Update Button
     const updateButton = document.createElement('button');
     updateButton.textContent = optionTrue.textContent;
-    updateButton.className = 'update-btn';
+    updateButton.className = 'btn btn-primary';
     updateButton.onclick = () => {
       if (optionTrue.func && typeof optionTrue.func === 'function') {
         try {
@@ -47,7 +42,7 @@ function showHoverDialog(quiestion, dialogArea, optionTrue, optionFalse) {
     // New Button
     const newButton = document.createElement('button');
     newButton.textContent = optionFalse.textContent;
-    newButton.className = 'new-btn';
+    newButton.className = 'btn btn-success';
     newButton.onclick = () => {
       if (optionFalse.func && typeof optionFalse.func === 'function') {
         try {
@@ -81,7 +76,6 @@ function showHoverDialog(quiestion, dialogArea, optionTrue, optionFalse) {
   if (dialogElement.offsetLeft + dialogElement.offsetWidth > window.innerWidth) {
     dialogElement.style.left = `${window.innerWidth - dialogElement.offsetWidth - 10}px`;
   }
-
 
   // Make the dialog visible
   dialogElement.classList.add('visible');

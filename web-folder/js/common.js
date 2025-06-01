@@ -24,6 +24,7 @@ function formatDateToRFC3339(dateItem) { const isoString = dateItem.toISOString(
 
 function getFirstDayMonth(dateItemIn) {
   const dateItemOut = new Date(dateItemIn);
+  dateItemOut.setHours(0, 0, 0, 0)
   dateItemOut.setDate(1);
   return dateItemOut;
 }
@@ -31,6 +32,7 @@ function getFirstDayMonth(dateItemIn) {
 function getLastDayMonth(dateItemIn) {
   const dateItemOut = new Date(dateItemIn);
   dateItemOut.setMonth(dateItemOut.getMonth() + 1);
+  dateItemOut.setHours(23, 59, 59, 99)
   dateItemOut.setDate(0);
   return dateItemOut;
 }
