@@ -45,7 +45,7 @@ CREATE TABLE groupmember (
   -- Properties
   usergroup_id BIGINT NOT NULL,
   user_id BIGINT NOT NULL,
-  name varchar(256) NOT NULL,
+  user_role INT NOT NULL,
 
   -- Timestamps
   cid bigint NOT NULL,
